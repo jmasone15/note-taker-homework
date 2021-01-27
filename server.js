@@ -59,11 +59,20 @@ app.post("/api/notes", function (req, res) {
 
     app.delete("/api/notes/:id", function (req, res) {
 
-        return res.json(fs.writeFile(db, JSON.stringify(req.body), 'utf-8', function (err) {
+        fs.readFile(path.join(__dirname, db), function (err, data) {
             if (err) throw err;
-            console.log(req.body);
-            console.log("Note Deleted!");
-        }));
+            noteId = req.params.id
+            userInput = JSON.parse(data);
+            userInput = userInput.filter(({ id }) => id !== req.params.id);
+            
+            
+
+            res.json(fs.writeFile(db, JSON.stringify(userInput), function (err) {
+                if (err) throw err;
+                console.log(userInput);
+                console.log("Note Deleted!");
+            }));
+        });
 
     });
 });
