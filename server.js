@@ -56,26 +56,27 @@ app.post("/api/notes", function (req, res) {
         }));
 
     });
-
-    app.delete("/api/notes/:id", function (req, res) {
-
-        fs.readFile(path.join(__dirname, db), function (err, data) {
-            if (err) throw err;
-            noteId = req.params.id
-            userInput = JSON.parse(data);
-            userInput = userInput.filter(({ id }) => id !== req.params.id);
-            
-            
-
-            res.json(fs.writeFile(db, JSON.stringify(userInput), function (err) {
-                if (err) throw err;
-                console.log(userInput);
-                console.log("Note Deleted!");
-            }));
-        });
-
-    });
 });
+
+app.delete("/api/notes/:id", function (req, res) {
+
+    fs.readFile(path.join(__dirname, db), function (err, data) {
+        if (err) throw err;
+        noteId = req.params.id
+        userInput = JSON.parse(data);
+        userInput = userInput.filter(({ id }) => id !== req.params.id);
+
+
+
+        res.json(fs.writeFile(db, JSON.stringify(userInput), function (err) {
+            if (err) throw err;
+            console.log(userInput);
+            console.log("Note Deleted!");
+        }));
+    });
+
+});
+
 
 // Start the server on the dynamic port
 app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}...`));

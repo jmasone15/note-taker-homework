@@ -1,5 +1,7 @@
 const path = require("path");
 const fs = require("fs");
+const { v4: uuidv4 } = require('uuid');
+const db = "../db/db.json"
 
 
 module.exports = function (app) {
@@ -29,24 +31,24 @@ module.exports = function (app) {
             }));
 
         });
+    });
 
-        app.delete("/api/notes/:id", function (req, res) {
+    app.delete("/api/notes/:id", function (req, res) {
 
-            fs.readFile(path.join(__dirname, db), function (err, data) {
+        fs.readFile(path.join(__dirname, db), function (err, data) {
+            if (err) throw err;
+            noteId = req.params.id
+            userInput = JSON.parse(data);
+            userInput = userInput.filter(({ id }) => id !== req.params.id);
+
+
+
+            res.json(fs.writeFile(db, JSON.stringify(userInput), function (err) {
                 if (err) throw err;
-                noteId = req.params.id
-                userInput = JSON.parse(data);
-                userInput = userInput.filter(({ id }) => id !== req.params.id);
-
-
-
-                res.json(fs.writeFile(db, JSON.stringify(userInput), function (err) {
-                    if (err) throw err;
-                    console.log(userInput);
-                    console.log("Note Deleted!");
-                }));
-            });
-
+                console.log(userInput);
+                console.log("Note Deleted!");
+            }));
         });
+
     });
 };
